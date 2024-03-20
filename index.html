@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Zen</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="text-slate-700 bg-slate-100 h-full w-screen">
+    <header class="font-bold text-3xl px-8 py-8 md:py-4 bg-slate-200 w-screen">
+      <h1 class="flex w-full items-center justify-center flex-col md:flex-row">
+        <img
+          class="h-16 md:h-24 block"
+          src="alpine.png"
+          alt="Alpine.js icon"
+          title="Alpine.js"
+        />
+        <span class="p-4">ｘ</span>
+        <img
+          class="h-8 md:h-16 block"
+          src="pokeapi.png"
+          alt="Classic Pokemon yellow and blue text logo"
+          title="Pokemon"
+        />
+      </h1>
+    </header>
+    <main x-data="pokemon">
+      <template x-if="pokemon.length">
+        <div class="flex justify-center align-center flex-col">
+          <div class="w-screen p-8 flex align-center justify-center mt-8">
+            <img
+              x-show="active.image"
+              :src="active.image"
+              :alt="'Image of TCG card for ' + active.name"
+              class="h-80 mx-auto"
+            />
+          </div>
+          <div class="mt-8 flex items-center justify-center w-screen flex-col md:flex-row">
+            <button
+              class="bg-slate-300 rounded block text-center py-2 px-4 m-2"
+              @click="savePokemonCard"
+              x-show="active.image && isLoaded"
+            >
+              Save Card
+            </button>
+            <button
+              class="bg-slate-300 rounded block text-center py-2 px-4 m-2"
+              @click="isLoaded ? getRandomPokemon : false"
+              :aria-disabled="!isLoaded"
+              :class="!isLoaded ? 'cursor-progress' : ''"
+            >
+              <span x-show="isLoaded">New Pokemon</span>
+              <span x-show="!isLoaded" class="flex items-center justify-center">
+                <svg
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-slate-700"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Loading...
+              </span>
+            </button>
+            <button
+              class="bg-slate-300 rounded block text-center py-2 px-4 m-2"
+              @click="getNextPokemonCard"
+              x-show="availableCards.length !== cardCount && isLoaded"
+            >
+              Next Card Variant
+            </button>
+          </div>
+        </div>
+      </template>
+      <div class="w-screen mt-12">
+        <!--Note that template needs a single root element!-->
+        <div class="font-bold text-3xl px-8 py-4 bg-slate-200 w-screen">
+          <h2 class="text-center text-xl">
+            Saved cards: <span x-text="savedCards.length"></span>
+          </h2>
+        </div>
+        <div class="w-screen mt-8">
+          <div class="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-10">
+            <template x-for="card in savedCards">
+              <img
+                :src="card.image"
+                :alt="'Image of TCG card for ' + card.name"
+                class="h-80 w-auto mx-auto block"
+              />
+            </template>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
